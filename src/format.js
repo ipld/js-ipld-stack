@@ -52,7 +52,7 @@ const tree = function * (decoded, path = []) {
 	}
 }
 
-const readonly = () => throw new Error('Read-only property')
+const readonly = () => { throw new Error('Read-only property') }
 
 class Reader {
   constructor (decoded) {
@@ -92,4 +92,6 @@ class Format {
 exports.create = (encode, decode, format) => {
   return new Format(encode, decode, format)
 }
+exports.Format = Format
+exports.Reader = Reader
 

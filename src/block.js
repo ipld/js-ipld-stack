@@ -1,5 +1,5 @@
 const { promisify } = require('util')
-const CID = require('CID')
+const CID = require('cids')
 const multihashing = promisify(require('multihashing-async'))
 
 /* temp getFormat until the real one is implemented */
@@ -23,12 +23,12 @@ class Block {
     // Do our best to avoid accidental mutations of the options object after instantiation
     // Note: we can't actually freeze the object because we mutate it once per property later
     opts = Object.assign({}, opts)
-    Object.defineProperty(this, 'opts', { get: () => opts, set: () => throw new Error('Cannot set opts') })
+    Object.defineProperty(this, 'opts', { get: () => opts, set: () => { throw new Error('Cannot set opts') } })
   }
   get source () {
     return this.opts.source
   }
-  set source () {
+  set source (source) {
     if (this.opts.source) throw new Error('Once set the block source is immutable')
     this.opts.source = source
   }

@@ -1,0 +1,27 @@
+{
+  "name": "ipld-stack",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "cids": "^0.5.8",
+    "ipld-dag-cbor": "^0.13.1",
+    "multihashing-async": "^0.5.2",
+    "tap": "^13.0.0-rc.20"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "tap test/test-*.js --cov"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mikeal/ipld-stack.git"
+  },
+  "keywords": [],
+  "author": "Mikeal Rogers <mikeal.rogers@gmail.com> (https://www.mikealrogers.com/)",
+  "license": "(Apache-2.0 AND MIT)",
+  "bugs": {
+    "url": "https://github.com/mikeal/ipld-stack/issues"
+  },
+  "homepage": "https://github.com/mikeal/ipld-stack#readme"
+}
