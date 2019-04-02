@@ -1,4 +1,4 @@
-const interface = require('../src/format')
+const _format = require('../src/format')
 const CID = require('cids')
 const { test } = require('tap')
 
@@ -22,7 +22,7 @@ const decode = async buffer => {
   return obj
 }
 
-const create = () => interface.create(encode, decode, 'terrible-dag')
+const create = () => _format.create(encode, decode, 'terrible-dag')
 
 test('test create', async t => {
   create()
@@ -30,8 +30,7 @@ test('test create', async t => {
 
 test('test encode/decode', async t => {
   let format = create()
-  let buffer = await format.encode({hello: 'world'})
+  let buffer = await format.encode({ hello: 'world' })
   let obj = await format.decode(buffer)
-  t.same(obj, {hello: 'world'})
+  t.same(obj, { hello: 'world' })
 })
-

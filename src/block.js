@@ -33,7 +33,7 @@ class Block {
     this.opts.source = source
   }
   async cid () {
-    if (this.opts.cid) return cid
+    if (this.opts.cid) return this.opts.cid
     let format = this.format
     let hash = await multihashing(await this.data(), this.opts.algo)
     let cid = new CID(1, format, hash)
@@ -64,8 +64,7 @@ class Block {
     return format.decode(this.opts.data)
   }
 }
-Block.from = (source, format, algo) => new Block({source, format, algo})
-Block.create = (data, cid) => new Block({data, cid})
+Block.from = (source, format, algo) => new Block({ source, format, algo })
+Block.create = (data, cid) => new Block({ data, cid })
 
 module.exports = Block
-

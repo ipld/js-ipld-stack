@@ -6,12 +6,21 @@
   "dependencies": {
     "cids": "^0.5.8",
     "ipld-dag-cbor": "^0.13.1",
-    "multihashing-async": "^0.5.2",
+    "multihashing-async": "^0.5.2"
+  },
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-node": "^8.0.1",
+    "eslint-plugin-promise": "^4.1.1",
+    "eslint-plugin-standard": "^4.0.0",
     "tap": "^13.0.0-rc.20"
   },
-  "devDependencies": {},
   "scripts": {
-    "test": "tap test/test-*.js --cov"
+    "test": "tap test/test-*.js --cov",
+    "lint": "eslint index.js src/*.js test/*.js",
+    "pretest": "npm run lint"
   },
   "repository": {
     "type": "git",
