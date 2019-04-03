@@ -6,7 +6,7 @@ const multihashing = promisify(require('multihashing-async'))
 const getFormat = async format => {
   let module
   if (format === 'dag-cbor') {
-    module = require('../formats/cbor')
+    module = require('./dag-cbor')
   }
   return module
 }
@@ -65,6 +65,11 @@ class Block {
   }
 }
 Block.from = (source, format, algo) => new Block({ source, format, algo })
-Block.create = (data, cid) => new Block({ data, cid })
-
+Block.create = (data, cid, validate = false) => {
+  if (typeof cid === 'string') cid = new CID(cid)
+  if (validate) {
+    // TODO: validate cid hash matches data
+  }
+  return new Block({ data, cid })
+}
 module.exports = Block
