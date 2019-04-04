@@ -1,33 +1,23 @@
 // @flow strict
 
 import type {
-  BlockView,
-  BlockReader,
   CID,
-  BlockFactory,
   BinaryEncoded,
   Algorithm,
   Format,
-  Eventual
-} from "./interface.js"
+  Eventual,
+  BlockReader
+} from "./codec-interface.js"
 
 export type BlockOptions<a> =
   | {| source: a, codec: Format, algo: Algorithm |}
   | {| data: BinaryEncoded<a>, codec: Format, algo: Algorithm |}
   | {| data: BinaryEncoded<a>, cid: CID<a> |}
 
-declare class Block<a> implements BlockView<a> {
-  static encoder<a>(a, Format, algorithm?: Algorithm): BlockView<a>;
-  static decoder<a>(
-    BinaryEncoded<a>,
-    Format,
-    algorithm?: Algorithm
-  ): BlockView<a>;
-  static create<a>(
-    BinaryEncoded<a>,
-    cid: CID<a>,
-    validate?: boolean
-  ): BlockView<a>;
+declare class Block<a> {
+  static encoder<a>(a, Format, algorithm?: Algorithm): Block<a>;
+  static decoder<a>(BinaryEncoded<a>, Format, algorithm?: Algorithm): Block<a>;
+  static create<a>(BinaryEncoded<a>, cid: CID<a>, validate?: boolean): Block<a>;
 
   constructor(BlockOptions<a>): void;
 
@@ -39,14 +29,6 @@ declare class Block<a> implements BlockView<a> {
   reader(): BlockReader<a>;
 }
 
-export type {
-  CID,
-  Block,
-  BlockView,
-  BlockReader,
-  BinaryEncoded,
-  Algorithm,
-  Format
-}
+export type { CID, Block, BlockReader, BinaryEncoded, Algorithm, Format }
 
 export default Block

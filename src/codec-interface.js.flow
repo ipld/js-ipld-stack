@@ -1,16 +1,32 @@
 // @flow strict
 
-import type {
-  Format,
-  Path,
-  Codec,
-  BlockView,
-  BlockReader,
-  Eventual,
-  BinaryEncoded,
-  BlockEntry,
-  CID
-} from "./interface.js"
+import type { Format, CID } from "./cid.js"
+import type { Block } from "./block.js"
+
+export type Algorithm = string
+export type Path = string
+export opaque type BinaryEncoded<a>: Uint8Array = Uint8Array
+export type BlockEntry<a> = { value: CID<a>, remaining: string } | { value: a }
+export type Eventual<+a> = a | Promise<a>
+
+export interface Encoder<a> {
+  encode(a): Eventual<BinaryEncoded<a>>;
+}
+
+export interface Decoder<a> {
+  decode(BinaryEncoded<a>): Eventual<a>;
+}
+
+export interface Codec<a> extends Encoder<a>, Decoder<a> {
+  +codec: Format;
+  reader(Block<a>): BlockReader<a>;
+}
+
+export interface BlockReader<a> {
+  get(Path): BlockEntry<mixed>;
+  links(): Iterable<[Path, CID<mixed>]>;
+  tree(): Iterable<Path>;
+}
 
 declare export function create<a>(
   encode: (a) => Eventual<BinaryEncoded<a>>,
@@ -35,17 +51,7 @@ declare export class CodecInterface<a> implements Codec<a> {
   +codec: Format;
   encode(a): Eventual<BinaryEncoded<a>>;
   decode(BinaryEncoded<a>): Eventual<a>;
-  reader(BlockView<a>): Reader<a>;
+  reader(Block<a>): Reader<a>;
 }
 
-export type {
-  Format,
-  Path,
-  Codec,
-  BlockView,
-  BlockReader,
-  Eventual,
-  BinaryEncoded,
-  BlockEntry,
-  CID
-}
+export type { Format, CID }

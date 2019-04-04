@@ -1,5 +1,5 @@
 // @flow strict
 
-import type { Codec } from "./interface.js"
+import type { Codec } from "./codec-interface.js"
 
 declare export default Codec<mixed>
