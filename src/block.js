@@ -53,6 +53,10 @@ class Block {
     }
     return codec.decode(this.opts.data)
   }
+  async reader () {
+    let codec = await getCodec(this.codec)
+    return codec.reader(this)
+  }
 }
 Block.from = (source, codec, algo) => new Block({ source, codec, algo })
 Block.create = (data, cid/*, validate = false */) => {

@@ -5,7 +5,7 @@ const links = function * (decoded, path = []) {
     let _path = path.slice()
     _path.push(key)
     let val = decoded[key]
-    if (typeof val === 'object') {
+    if (val && typeof val === 'object') {
       if (Array.isArray(val)) {
         for (let i = 0; i < val.length; i++) {
           let __path = _path.slice()
@@ -14,7 +14,7 @@ const links = function * (decoded, path = []) {
           if (CID.isCID(o)) {
             yield [__path.join('/'), o]
           } else if (typeof o === 'object') {
-            yield * links(o, _path)
+            yield * links(o, __path)
           }
         }
       } else {
@@ -34,15 +34,15 @@ const tree = function * (decoded, path = []) {
     _path.push(key)
     yield _path.join('/')
     let val = decoded[key]
-    if (typeof val === 'object') {
+    if (val && typeof val === 'object' && !CID.isCID(val)) {
       if (Array.isArray(val)) {
         for (let i = 0; i < val.length; i++) {
           let __path = _path.slice()
           __path.push(i)
           let o = val[i]
           yield __path.join('/')
-          if (typeof o === 'object') {
-            yield * tree(o, _path)
+          if (typeof o === 'object' && !CID.isCID(o)) {
+            yield * tree(o, __path)
           }
         }
       } else {
