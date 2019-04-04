@@ -24,15 +24,28 @@ The `Block` API is the single endpoint for authoring IPLD data structures. Unles
 implementing a new codec you can get everything you need from the Block API: encoding, 
 decoding, cid creation w/ hashing.
 
-## `Block.from(object | binary, codec, algorithm = 'sha2-256')`
+## `Block.encoder(object, codec, algorithm = 'sha2-256')`
 
-Create a Block instance from either a native object or an existing binary encoded block.
+Create a Block instance from either a native object.
 
-The `cid` as well as any necessary encoding or decoding will not happen until requested
+The `cid` as well as encoding will not happen until requested
 and then will be cached when appropriate.
 
 ```javascript
-let block = Block.from({hello: 'world'}, 'dag-cbor')
+let block = Block.encoder({hello: 'world'}, 'dag-cbor')
+```
+
+Returns a `Block` instance.
+
+## `Block.decoder(binary, codec, algorithm = 'sha2-256')`
+
+Create a Block instance from an existing binary encoded block
+
+The `cid` as well as decoding will not happen until requested
+and then will be cached when appropriate.
+
+```javascript
+let block = Block.decoder(someBuffer, 'dag-cbor')
 ```
 
 Returns a `Block` instance.
@@ -61,7 +74,7 @@ likely to be mutated by the consumer.
 
 Promise that resolves to a `cid` instance. Cached after creation.
 
-### `block.data()`
+### `block.encode()`
 
 Promise that resolves to a `Buffer` instance encoded from the source input.
 
