@@ -1,8 +1,8 @@
-const _format = require('../src/format')
+const _codec = require('../src/codec-interface')
 const CID = require('cids')
 const { test } = require('tap')
 
-/* very bad dag format for testing */
+/* very bad dag codec for testing */
 const encode = async obj => {
   for (let key of Object.keys(obj)) {
     if (key.startsWith('link:')) {
@@ -22,15 +22,15 @@ const decode = async buffer => {
   return obj
 }
 
-const create = () => _format.create(encode, decode, 'terrible-dag')
+const create = () => _codec.create(encode, decode, 'terrible-dag')
 
 test('test create', async t => {
   create()
 })
 
 test('test encode/decode', async t => {
-  let format = create()
-  let buffer = await format.encode({ hello: 'world' })
-  let obj = await format.decode(buffer)
+  let codec = create()
+  let buffer = await codec.encode({ hello: 'world' })
+  let obj = await codec.decode(buffer)
   t.same(obj, { hello: 'world' })
 })

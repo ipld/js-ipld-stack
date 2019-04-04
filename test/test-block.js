@@ -18,8 +18,14 @@ test('Block data caching', async t => {
 
 test('Block decode', async t => {
   let data = await cbor.encode({ hello: 'world' })
-  let block = new Block({ data, format: 'dag-cbor' })
+  let block = new Block({ data, codec: 'dag-cbor' })
   let decoded = await block.decode()
+  t.same(decoded, { hello: 'world' })
+  block = Block.from({ hello: 'world' }, 'dag-cbor')
+  decoded = await block.decode()
+  t.same(decoded, { hello: 'world' })
+  // test data caching
+  decoded = await block.decode()
   t.same(decoded, { hello: 'world' })
 })
 
@@ -30,4 +36,10 @@ test('Block cid', async t => {
   block = Block.from({ hello: 'world' }, 'dag-cbor', 'sha1')
   cid = await block.cid()
   t.same(cid.toBaseEncodedString(), 'z8d8Cu56HEXrUTgRbLdkfRrood2EhZyyL')
+  block = Block.create(await block.data(), 'z8d8Cu56HEXrUTgRbLdkfRrood2EhZyyL')
+  t.same((await block.cid()).toBaseEncodedString(), 'z8d8Cu56HEXrUTgRbLdkfRrood2EhZyyL')
+  t.same(block.codec, 'dag-cbor')
+  block = Block.create(await block.data(), cid)
+  t.same((await block.cid()).toBaseEncodedString(), 'z8d8Cu56HEXrUTgRbLdkfRrood2EhZyyL')
+  t.same(block.codec, 'dag-cbor')
 })

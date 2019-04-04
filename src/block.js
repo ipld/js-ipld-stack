@@ -1,42 +1,33 @@
 const { promisify } = require('util')
 const CID = require('cids')
 const multihashing = promisify(require('multihashing-async'))
+const getCodec = require('./get-codec')
 
-/* temp getFormat until the real one is implemented */
-const getFormat = async format => {
-  let module
-  if (format === 'dag-cbor') {
-    module = require('./dag-cbor')
-  }
-  return module
-}
+const readonly = value => ({ get: () => value, set: () => { throw new Error('Cannot set read-only property') } })
 
 class Block {
   constructor (opts) {
+    if (!opts) throw new Error('Block options are required')
     if (!opts.source && !opts.data) {
       throw new Error('Block instances must be created with either an encode source or data')
     }
-    if (opts.source && !opts.format) {
-      throw new Error('Block instances created from source objects must include desired format')
+    if (opts.source && !opts.codec) {
+      throw new Error('Block instances created from source objects must include desired codec')
+    }
+    if (opts.data && !opts.cid && !opts.codec) {
+      throw new Error('Block instances created from data must include cid or codec')
     }
     if (!opts.cid && !opts.algo) opts.algo = 'sha2-256'
     // Do our best to avoid accidental mutations of the options object after instantiation
     // Note: we can't actually freeze the object because we mutate it once per property later
     opts = Object.assign({}, opts)
-    Object.defineProperty(this, 'opts', { get: () => opts, set: () => { throw new Error('Cannot set opts') } })
-  }
-  get source () {
-    return this.opts.source
-  }
-  set source (source) {
-    if (this.opts.source) throw new Error('Once set the block source is immutable')
-    this.opts.source = source
+    Object.defineProperty(this, 'opts', readonly(opts))
   }
   async cid () {
     if (this.opts.cid) return this.opts.cid
-    let format = this.format
+    let codec = this.codec
     let hash = await multihashing(await this.data(), this.opts.algo)
-    let cid = new CID(1, format, hash)
+    let cid = new CID(1, codec, hash)
     this.opts.cid = cid
     return cid
   }
@@ -44,32 +35,33 @@ class Block {
     if (this.opts.data) return this.opts.data
     return this._encode()
   }
-  get format () {
-    if (this.opts.format) return this.opts.format
-    if (this.opts.cid) return this.opts.cid.format
-    throw new Error('Block has no associated format')
+  get codec () {
+    if (this.opts.cid) return this.opts.cid.codec
+    else return this.opts.codec
   }
   async _encode () {
     if (this.opts.data) throw new Error('Cannot re-encode block that is already encoded')
-    let format = await getFormat(this.format)
-    let data = await format.encode(this.source)
+    let codec = await getCodec(this.codec)
+    let data = await codec.encode(this.opts.source)
     this.opts.data = data
     return data
   }
   async decode () {
-    let format = await getFormat(this.format)
+    let codec = await getCodec(this.codec)
     if (!this.opts.data) {
       await this._encode()
     }
-    return format.decode(this.opts.data)
+    return codec.decode(this.opts.data)
   }
 }
-Block.from = (source, format, algo) => new Block({ source, format, algo })
-Block.create = (data, cid, validate = false) => {
+Block.from = (source, codec, algo) => new Block({ source, codec, algo })
+Block.create = (data, cid/*, validate = false */) => {
   if (typeof cid === 'string') cid = new CID(cid)
+  /*
   if (validate) {
     // TODO: validate cid hash matches data
   }
+  */
   return new Block({ data, cid })
 }
 module.exports = Block
