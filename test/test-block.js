@@ -18,7 +18,7 @@ test('Block data caching', async t => {
 
 test('Block decode', async t => {
   let data = await cbor.encode({ hello: 'world' })
-  let block = new Block({ data, codec: 'dag-cbor' })
+  let block = Block.from(data, 'dag-cbor')
   let decoded = await block.decode()
   t.same(decoded, { hello: 'world' })
   block = Block.from({ hello: 'world' }, 'dag-cbor')
