@@ -6,7 +6,7 @@ const link = new CID('zdpuAtX7ZibcWdSKQwiDCkPjWwRvtcKCPku9H7LhgA4qJW4Wk')
 
 const fixture = {
   n: null,
-  a: ['0', 1, link, {}, { n: null, l: link}],
+  a: ['0', 1, link, {}, { n: null, l: link }],
   o: {
     n: null,
     l: link
@@ -37,19 +37,18 @@ test('tree', async t => {
   let reader = await getReader()
   let tree = Array.from(reader.tree())
   t.same(tree, [
-    "a",
-    "a/0",
-    "a/1",
-    "a/2",
-    "a/3",
-    "a/4",
-    "a/4/l",
-    "a/4/n",
-    "l",
-    "n",
-    "o",
-    "o/l",
-    "o/n",
+    'a',
+    'a/0',
+    'a/1',
+    'a/2',
+    'a/3',
+    'a/4',
+    'a/4/l',
+    'a/4/n',
+    'l',
+    'n',
+    'o',
+    'o/l',
+    'o/n'
   ])
 })
-
