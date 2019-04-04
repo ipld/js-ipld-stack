@@ -1,0 +1,71 @@
+// @flow strict
+
+export interface BlockView<a> {
+  +codec: Format;
+
+  decode(): Eventual<a>;
+  encode(): Eventual<BinaryEncoded<a>>;
+  cid(): Eventual<CID<a>>;
+  reader(): BlockReader<a>;
+}
+
+export interface BlockReader<a> {
+  get(Path): Eventual<BlockEntry<mixed>>;
+  links(): AsyncIterable<[Path, CID<mixed>]>;
+  tree(): AsyncIterable<Path>;
+}
+
+export interface BlockFactory {
+  encoder<a>(a, Format, algorithm?: Algorithm): BlockView<a>;
+  decoder<a>(BinaryEncoded<a>, Format, algorithm?: Algorithm): BlockView<a>;
+  create<a>(BinaryEncoded<a>, cid: CID<a>, validate?: boolean): BlockView<a>;
+}
+
+export interface Encoder<a> {
+  encode(a): Eventual<BinaryEncoded<a>>;
+}
+
+export interface Decoder<a> {
+  decode(BinaryEncoded<a>): Eventual<a>;
+}
+
+export interface Codec<a> extends Encoder<a>, Decoder<a> {
+  +codec: Format;
+  reader(BlockView<a>): BlockReader<a>;
+}
+
+export type Algorithm = string
+export type Path = string
+export opaque type BinaryEncoded<a>: Uint8Array = Uint8Array
+export type Eventual<+a> = a | Promise<a>
+export type BlockEntry<a> = { value: CID<a>, remaining: string } | { value: a }
+
+export type Version = 0 | 1
+export type Format = string
+export type Multihash = Buffer
+export type BaseEncodedString = string
+
+declare class CID<a> {
+  constructor(Version, Format, Multihash): void;
+  constructor(BaseEncodedString): void;
+  constructor(Buffer): void;
+
+  +codec: Format;
+  +multihash: Multihash;
+  +buffer: Buffer;
+  +prefix: Buffer;
+
+  toV0(): CID<a>;
+  toV1(): CID<a>;
+  toBaseEncodedString(base?: string): BaseEncodedString;
+  toString(): BaseEncodedString;
+  toJSON(): { codec: Format, version: Version, hash: Multihash };
+
+  equals(mixed): boolean;
+
+  static codecs: { [string]: Format };
+  static isCID(mixed): boolean;
+  static validateCID(mixed): void;
+}
+
+export type { CID }

@@ -1,0 +1,5 @@
+// @flow strict
+
+import type { Format, Codec } from "./interface.js"
+
+declare export default function getCodec<a>(Format): Codec<a>

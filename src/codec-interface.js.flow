@@ -1,0 +1,51 @@
+// @flow strict
+
+import type {
+  Format,
+  Path,
+  Codec,
+  BlockView,
+  BlockReader,
+  Eventual,
+  BinaryEncoded,
+  BlockEntry,
+  CID
+} from "./interface.js"
+
+declare export function create<a>(
+  encode: (a) => Eventual<BinaryEncoded<a>>,
+  decode: (BinaryEncoded<a>) => Eventual<a>,
+  codec: Format
+): Codec<a>
+
+declare export class Reader<a> implements BlockReader<a> {
+  constructor(a): void;
+  get(Path): Eventual<BlockEntry<mixed>>;
+  links(): AsyncIterable<[Path, CID<mixed>]>;
+  tree(): AsyncIterable<Path>;
+}
+
+declare export class CodecInterface<a> implements Codec<a> {
+  constructor(
+    encode: (a) => Eventual<BinaryEncoded<a>>,
+    decode: (BinaryEncoded<a>) => Eventual<a>,
+    codec: Format
+  ): void;
+
+  +codec: Format;
+  encode(a): Eventual<BinaryEncoded<a>>;
+  decode(BinaryEncoded<a>): Eventual<a>;
+  reader(BlockView<a>): Reader<a>;
+}
+
+export type {
+  Format,
+  Path,
+  Codec,
+  BlockView,
+  BlockReader,
+  Eventual,
+  BinaryEncoded,
+  BlockEntry,
+  CID
+}
