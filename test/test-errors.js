@@ -27,7 +27,7 @@ test('data only', async t => {
 
 test('double encode', async t => {
   let block = Block.from({}, 'dag-cbor')
-  await block.data()
+  await block.encode()
   await tryError(() => block._encode(), 'Cannot re-encode block that is already encoded', t)
 })
 

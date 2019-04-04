@@ -26,12 +26,12 @@ class Block {
   async cid () {
     if (this.opts.cid) return this.opts.cid
     let codec = this.codec
-    let hash = await multihashing(await this.data(), this.opts.algo)
+    let hash = await multihashing(await this.encode(), this.opts.algo)
     let cid = new CID(1, codec, hash)
     this.opts.cid = cid
     return cid
   }
-  async data () {
+  async encode () {
     if (this.opts.data) return this.opts.data
     return this._encode()
   }
