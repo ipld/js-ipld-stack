@@ -77,11 +77,11 @@ class Reader {
   }
 }
 
-class Format {
-  constructor (encode, decode, format) {
+class CodecInterface {
+  constructor (encode, decode, codec) {
     this.encode = encode
     this.decode = decode
-    Object.defineProperty(this, 'format', { get: () => format, set: readonly })
+    Object.defineProperty(this, 'codec', { get: () => codec, set: readonly })
   }
   async reader (block) {
     let decoded = await block.decode()
@@ -89,8 +89,8 @@ class Format {
   }
 }
 
-exports.create = (encode, decode, format) => {
-  return new Format(encode, decode, format)
+exports.create = (encode, decode, codec) => {
+  return new CodecInterface(encode, decode, codec)
 }
-exports.Format = Format
+exports.CodecInterface = CodecInterface
 exports.Reader = Reader
