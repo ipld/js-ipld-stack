@@ -6,13 +6,13 @@ export interface BlockView<a> {
   decode(): Eventual<a>;
   encode(): Eventual<BinaryEncoded<a>>;
   cid(): Eventual<CID<a>>;
-  reader(): BlockReader<a>;
+  reader(): Eventual<BlockReader<a>>;
 }
 
 export interface BlockReader<a> {
-  get(Path): Eventual<BlockEntry<mixed>>;
-  links(): AsyncIterable<[Path, CID<mixed>]>;
-  tree(): AsyncIterable<Path>;
+  get(Path): BlockEntry<mixed>;
+  links(): Iterable<[Path, CID<mixed>]>;
+  tree(): Iterable<Path>;
 }
 
 export interface BlockFactory {

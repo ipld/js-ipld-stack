@@ -20,9 +20,9 @@ declare export function create<a>(
 
 declare export class Reader<a> implements BlockReader<a> {
   constructor(a): void;
-  get(Path): Eventual<BlockEntry<mixed>>;
-  links(): AsyncIterable<[Path, CID<mixed>]>;
-  tree(): AsyncIterable<Path>;
+  get(Path): BlockEntry<mixed>;
+  links(): Iterable<[Path, CID<mixed>]>;
+  tree(): Iterable<Path>;
 }
 
 declare export class CodecInterface<a> implements Codec<a> {

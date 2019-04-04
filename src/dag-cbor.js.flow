@@ -1,4 +1,4 @@
-// @flow type
+// @flow strict
 
 import type { Codec } from "./interface.js"
 

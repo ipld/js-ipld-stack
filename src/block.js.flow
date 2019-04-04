@@ -1,4 +1,4 @@
-// @flow stirct
+// @flow strict
 
 import type {
   BlockView,
