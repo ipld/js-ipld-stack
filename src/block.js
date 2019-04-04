@@ -58,10 +58,8 @@ class Block {
     return codec.reader(this)
   }
 }
-Block.from = (source, codec, algo) => {
-  if (Buffer.isBuffer(source)) return new Block({ data: source, codec, algo })
-  else return new Block({ source, codec, algo })
-}
+Block.encoder = (source, codec, algo) => new Block({ source, codec, algo })
+Block.decoder = (data, codec, algo) => new Block({ data, codec, algo })
 Block.create = (data, cid/*, validate = false */) => {
   if (typeof cid === 'string') cid = new CID(cid)
   /*

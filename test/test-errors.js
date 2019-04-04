@@ -26,12 +26,12 @@ test('data only', async t => {
 })
 
 test('double encode', async t => {
-  let block = Block.from({}, 'dag-cbor')
+  let block = Block.encoder({}, 'dag-cbor')
   await block.encode()
   await tryError(() => block._encode(), 'Cannot re-encode block that is already encoded', t)
 })
 
 test('set opts', async t => {
-  let block = Block.from({}, 'dag-cbor')
+  let block = Block.encoder({}, 'dag-cbor')
   await tryError(() => { block.opts = 'asdf' }, 'Cannot set read-only property', t)
 })

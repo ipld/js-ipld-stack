@@ -14,7 +14,7 @@ const fixture = {
   l: link
 }
 
-const getReader = () => Block.from(fixture, 'dag-cbor').reader()
+const getReader = () => Block.encoder(fixture, 'dag-cbor').reader()
 
 test('get path', async t => {
   let reader = await getReader()
