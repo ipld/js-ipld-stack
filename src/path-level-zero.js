@@ -1,5 +1,5 @@
-const Block = require('./Block')
-const CID = require('CID')
+const Block = require('./block')
+const CID = require('cids')
 
 const resolve = async (path, root, get) => {
   if (CID.isCID(root)) root = await get(root)
