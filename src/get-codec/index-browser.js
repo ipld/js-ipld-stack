@@ -4,7 +4,7 @@ const cache = {}
 const getCodec = async codec => {
   if (cache[codec]) return cache[codec]
   if (codec === 'dag-cbor') {
-    cache[codec] = import('../dag-cbor')
+    cache[codec] = import('../dag-cbor').then(mod => mod.default)
   }
   if (codec === 'raw') {
     // inline raw, it's very small.
