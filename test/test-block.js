@@ -27,6 +27,7 @@ test('Block decode', async t => {
   // test data caching
   decoded = await block.decode()
   t.same(decoded, { hello: 'world' })
+  t.same(await block.validate(), true)
 })
 
 test('Block cid', async t => {
@@ -39,9 +40,12 @@ test('Block cid', async t => {
   block = Block.create(await block.encode(), 'z8d8Cu56HEXrUTgRbLdkfRrood2EhZyyL')
   t.same((await block.cid()).toBaseEncodedString(), 'z8d8Cu56HEXrUTgRbLdkfRrood2EhZyyL')
   t.same(block.codec, 'dag-cbor')
+  t.same(await block.validate(), true)
   block = Block.create(await block.encode(), cid)
   t.same((await block.cid()).toBaseEncodedString(), 'z8d8Cu56HEXrUTgRbLdkfRrood2EhZyyL')
   t.same(block.codec, 'dag-cbor')
+  block = Block.create(Buffer.from('asdf'), 'z8d8Cu56HEXrUTgRbLdkfRrood2EhZyyL')
+  t.same(await block.validate(), false)
 })
 
 const testRaw = async t => {
@@ -53,7 +57,6 @@ const testRaw = async t => {
   t.same(data, Buffer.from('asdf'))
   block = Block.encoder(Buffer.from('asdf'), 'raw')
   data = await block.decode()
-  console.error({ data })
   t.same(data, Buffer.from('asdf'))
 }
 

@@ -1,9 +1,12 @@
 const { promisify } = require('util')
 const CID = require('cids')
-const multihashing = promisify(require('multihashing-async'))
 const getCodec = require('./get-codec')
 
 const readonly = value => ({ get: () => value, set: () => { throw new Error('Cannot set read-only property') } })
+
+const multihashModule = require('multihashing-async')
+const multihashing = promisify(multihashModule)
+const validate = promisify(multihashModule.validate)
 
 class Block {
   constructor (opts) {
@@ -34,6 +37,13 @@ class Block {
   get codec () {
     if (this.opts.cid) return this.opts.cid.codec
     else return this.opts.codec
+  }
+  async validate () {
+    // if we haven't created a CID yet we know it will be valid :)
+    if (!this.opts.cid) return true
+    let cid = await this.cid()
+    let data = await this.encode()
+    return validate(data, cid.multihash)
   }
   async encode () {
     return this.encodeMaybeSync()

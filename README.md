@@ -82,6 +82,13 @@ Promise that resolves to a `Buffer` instance encoded from the source input.
 
 Returns an instance of `Reader()` from the codec implementation.
 
+### `block.validate()`
+
+Returns true/false if the CID's multihash matches the given block.
+
+If a CID hasn't been created yet it will return true since we know the hash will
+match in our eventually created CID.
+
 ## Hot path methods
 
 We expose a few extra APIs you can use if you find IPLD in the hot paths of your own code.
