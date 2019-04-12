@@ -10,4 +10,5 @@ const getCodec = codec => {
 }
 
 module.exports = getCodec
+module.exports.addCodec = (name, codec) => cache[name] = codec
 

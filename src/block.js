@@ -31,25 +31,51 @@ class Block {
     this.opts.cid = cid
     return cid
   }
-  async encode () {
-    if (this.opts.data) return this.opts.data
-    return this._encode()
-  }
   get codec () {
     if (this.opts.cid) return this.opts.cid.codec
     else return this.opts.codec
   }
-  async _encode () {
-    if (this.opts.data) throw new Error('Cannot re-encode block that is already encoded')
-    let codec = await getCodec(this.codec)
-    let data = await codec.encode(this.opts.source)
-    this.opts.data = data
+  async encode () {
+    return this.encodeMaybeSync()
+  }
+  encodeMaybeSync () {
+    if (this.opts.data) return this.opts.data
+    let codec = getCodec(this.codec)
+    if (codec.then) {
+      return codec.then(codec => {
+        return this._encodeData(codec)
+      })
+    } else {
+      return this._encodeData(codec)
+    }
+  }
+  _encodeData (codec) {
+    let data = codec.encode(this.opts.source)
+    if (data.then) {
+      data.then(data => {
+        this.opts.data = data
+        return data
+      })
+    }
     return data
   }
   async decode () {
-    let codec = await getCodec(this.codec)
+    return this.decodeMaybeSync()
+  }
+  decodeMaybeSync () {
+    let codec = getCodec(this.codec)
+    if (codec.then) {
+      return codec.then(codec => this._decodeData(codec))
+    } else {
+      return this._decodeData(codec)
+    }
+  }
+  _decodeData (codec) {
     if (!this.opts.data) {
-      await this._encode()
+      let encoded = this.encode()
+      if (encoded.then) {
+        return encoded.then(() => codec.decode(this.opts.data))
+      }
     }
     return codec.decode(this.opts.data)
   }
