@@ -40,7 +40,7 @@ class Block {
   }
   encodeMaybeSync () {
     if (this.opts.data) return this.opts.data
-    let codec = getCodec(this.codec)
+    let codec = module.exports.getCodec(this.codec)
     if (codec.then) {
       return codec.then(codec => {
         return this._encodeData(codec)
@@ -57,13 +57,14 @@ class Block {
         return data
       })
     }
+    this.opts.data = data
     return data
   }
   async decode () {
     return this.decodeMaybeSync()
   }
   decodeMaybeSync () {
-    let codec = getCodec(this.codec)
+    let codec = module.exports.getCodec(this.codec)
     if (codec.then) {
       return codec.then(codec => this._decodeData(codec))
     } else {
@@ -72,7 +73,7 @@ class Block {
   }
   _decodeData (codec) {
     if (!this.opts.data) {
-      let encoded = this.encode()
+      let encoded = this._encodeData(codec)
       if (encoded.then) {
         return encoded.then(() => codec.decode(this.opts.data))
       }
@@ -80,7 +81,7 @@ class Block {
     return codec.decode(this.opts.data)
   }
   async reader () {
-    let codec = await getCodec(this.codec)
+    let codec = await module.exports.getCodec(this.codec)
     return codec.reader(this)
   }
 }
@@ -96,3 +97,4 @@ Block.create = (data, cid/*, validate = false */) => {
   return new Block({ data, cid })
 }
 module.exports = Block
+module.exports.getCodec = getCodec

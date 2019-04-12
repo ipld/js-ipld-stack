@@ -43,3 +43,41 @@ test('Block cid', async t => {
   t.same((await block.cid()).toBaseEncodedString(), 'z8d8Cu56HEXrUTgRbLdkfRrood2EhZyyL')
   t.same(block.codec, 'dag-cbor')
 })
+
+const testRaw = async t => {
+  let block = Block.encoder(Buffer.from('asdf'), 'raw')
+  let data = await block.encode()
+  t.same(data, Buffer.from('asdf'))
+  block = Block.decoder(Buffer.from('asdf'), 'raw')
+  data = await block.decode()
+  t.same(data, Buffer.from('asdf'))
+  block = Block.encoder(Buffer.from('asdf'), 'raw')
+  data = await block.decode()
+  console.error({ data })
+  t.same(data, Buffer.from('asdf'))
+}
+
+test('raw codec', async t => {
+  await testRaw(t)
+})
+
+test('async codec', async t => {
+  let asyncModule = new Promise(resolve => resolve(require('../src/raw')))
+  asyncModule.codec = 'raw'
+  Block.getCodec.setCodec(asyncModule)
+  await testRaw(t)
+
+  const asyncRaw = {
+    encode: async x => x,
+    decode: async x => x,
+    codec: 'raw'
+  }
+
+  Block.getCodec.setCodec(asyncRaw)
+  await testRaw(t)
+
+  let asyncRawModule = new Promise(resolve => resolve(asyncRaw))
+  asyncRawModule.codec = 'raw'
+  Block.getCodec.setCodec(asyncRawModule)
+  await testRaw(t)
+})
