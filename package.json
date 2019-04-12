@@ -5,7 +5,10 @@
   "main": "index.js",
   "dependencies": {
     "cids": "^0.5.8",
+    "fast-json-stable-stringify": "^2.0.0",
     "ipld-dag-cbor": "^0.13.1",
+    "is-circular": "^1.0.2",
+    "lodash.transform": "^4.6.0",
     "multihashing-async": "^0.6.0"
   },
   "devDependencies": {

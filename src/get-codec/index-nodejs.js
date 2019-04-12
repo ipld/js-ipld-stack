@@ -1,5 +1,6 @@
 const implementations = {
   'dag-cbor': require('../dag-cbor'),
+  'dag-json': require('../dag-json'),
   'raw': require('../raw')
 }
 
