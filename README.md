@@ -82,6 +82,21 @@ Promise that resolves to a `Buffer` instance encoded from the source input.
 
 Returns an instance of `Reader()` from the codec implementation.
 
+## Hot path methods
+
+We expose a few extra APIs you can use if you find IPLD in the hot paths of your own code.
+
+Since *some* codecs require async work and some do not, it's a good idea to try and factor
+our unnecesary async operations when you can if you can in hot paths.
+
+## `block.encodeMaybeSync`
+
+Just like `block.encode` but returns *either* a promise or the encoded value synchronously.
+
+## `block.decodeMaybeSync`
+
+Just like `block.decode` but returns *either* a proimse or the decoded value synchronously.
+
 # Codec Interface
 
 This is the primary interface for implementing new codecs.
