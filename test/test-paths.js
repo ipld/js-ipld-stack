@@ -1,5 +1,5 @@
 const Block = require('../src/block')
-const { find } = require('../src/path-level-zero')
+const { resolve, find } = require('../src/path-level-zero')
 const { test } = require('tap')
 
 const fixture = async () => {
@@ -20,4 +20,10 @@ test('basic find', async t => {
   t.same(await leaf.cid(), await ret.block.cid())
   t.same(ret.value, 'world')
   t.same(ret.path, 'hello')
+})
+
+test('basic resolve', async t => {
+  let { root, get } = await fixture()
+  let ret = await resolve('/one', root, get)
+  t.same(Object.keys(ret), ['two'])
 })
