@@ -96,16 +96,19 @@ class Block {
     return codec.reader(this)
   }
 }
-Block.encoder = (source, codec, algo) => new module.exports({ source, codec, algo })
-Block.decoder = (data, codec, algo) => new module.exports({ data, codec, algo })
-Block.create = (data, cid/*, validate = false */) => {
+
+let BlockWithIs = withIs(Block, { className: 'Block', symbolName: '@ipld/block' })
+BlockWithIs.getCodec = getCodec
+
+BlockWithIs.encoder = (source, codec, algo) => new BlockWithIs({ source, codec, algo })
+BlockWithIs.decoder = (data, codec, algo) => new BlockWithIs({ data, codec, algo })
+BlockWithIs.create = (data, cid/*, validate = false */) => {
   if (typeof cid === 'string') cid = new CID(cid)
   /*
   if (validate) {
     // TODO: validate cid hash matches data
   }
   */
-  return new module.exports({ data, cid })
+  return new BlockWithIs({ data, cid })
 }
-module.exports = withIs(Block, { className: 'Block', symbolName: '@ipld/block' })
-module.exports.getCodec = getCodec
+module.exports = BlockWithIs
