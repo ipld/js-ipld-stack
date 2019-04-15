@@ -1,6 +1,7 @@
 const { promisify } = require('util')
 const CID = require('cids')
 const getCodec = require('./get-codec')
+const withIs = require('class-is')
 
 const readonly = value => ({ get: () => value, set: () => { throw new Error('Cannot set read-only property') } })
 
@@ -95,8 +96,8 @@ class Block {
     return codec.reader(this)
   }
 }
-Block.encoder = (source, codec, algo) => new Block({ source, codec, algo })
-Block.decoder = (data, codec, algo) => new Block({ data, codec, algo })
+Block.encoder = (source, codec, algo) => new module.exports({ source, codec, algo })
+Block.decoder = (data, codec, algo) => new module.exports({ data, codec, algo })
 Block.create = (data, cid/*, validate = false */) => {
   if (typeof cid === 'string') cid = new CID(cid)
   /*
@@ -104,7 +105,7 @@ Block.create = (data, cid/*, validate = false */) => {
     // TODO: validate cid hash matches data
   }
   */
-  return new Block({ data, cid })
+  return new module.exports({ data, cid })
 }
-module.exports = Block
+module.exports = withIs(Block, { className: 'Block', symbolName: '@ipld/block' })
 module.exports.getCodec = getCodec
