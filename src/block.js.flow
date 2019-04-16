@@ -1,0 +1,34 @@
+// @flow strict
+
+import type {
+  CID,
+  BinaryEncoded,
+  Algorithm,
+  Format,
+  Eventual,
+  BlockReader
+} from "./codec-interface.js"
+
+export type BlockOptions<a> =
+  | {| source: a, codec: Format, algo: Algorithm |}
+  | {| data: BinaryEncoded<a>, codec: Format, algo: Algorithm |}
+  | {| data: BinaryEncoded<a>, cid: CID<a> |}
+
+declare class Block<a> {
+  static encoder<a>(a, Format, algorithm?: Algorithm): Block<a>;
+  static decoder<a>(BinaryEncoded<a>, Format, algorithm?: Algorithm): Block<a>;
+  static create<a>(BinaryEncoded<a>, cid: CID<a>, validate?: boolean): Block<a>;
+
+  constructor(BlockOptions<a>): void;
+
+  +codec: Format;
+
+  decode(): Eventual<a>;
+  encode(): Eventual<BinaryEncoded<a>>;
+  cid(): Eventual<CID<a>>;
+  reader(): BlockReader<a>;
+}
+
+export type { CID, Block, BlockReader, BinaryEncoded, Algorithm, Format }
+
+export default Block
