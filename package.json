@@ -22,9 +22,8 @@
     "tsame": "^2.0.1"
   },
   "scripts": {
-    "test": "tap test/test-*.js --cov",
-    "lint": "eslint index.js src/*.js test/*.js",
-    "pretest": "npm run lint"
+    "test": "aegir test -t node",
+    "lint": "aegir lint"
   },
   "repository": {
     "type": "git",
