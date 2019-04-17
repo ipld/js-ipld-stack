@@ -11,5 +11,6 @@ const getCodec = codec => {
 }
 
 module.exports = getCodec
-module.exports.setCodec = codec => implementations[codec.codec] = codec
-
+module.exports.setCodec = codec => {
+  implementations[codec.codec] = codec
+}

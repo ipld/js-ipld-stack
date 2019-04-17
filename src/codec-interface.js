@@ -1,5 +1,6 @@
 const CID = require('cids')
 
+/* eslint-disable max-depth */
 const links = function * (decoded, path = []) {
   for (let key of Object.keys(decoded)) {
     let _path = path.slice()
@@ -51,6 +52,7 @@ const tree = function * (decoded, path = []) {
     }
   }
 }
+/* eslint-enable max-depth */
 
 const readonly = () => { throw new Error('Read-only property') }
 

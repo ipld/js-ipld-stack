@@ -1,31 +1,36 @@
 const Block = require('../src/block')
-const { test } = require('tap')
+const { it } = require('mocha')
+const assert = require('assert')
+const tsame = require('tsame')
 
-const tryError = async (fn, message, t) => {
+const same = (...args) => assert.ok(tsame(...args))
+const test = it
+
+const tryError = async (fn, message) => {
   try {
     await fn()
   } catch (e) {
-    t.same(e.message, message)
+    same(e.message, message)
   }
 }
 
-test('No block options', async t => {
-  await tryError(() => new Block(), 'Block options are required', t)
+test('No block options', async () => {
+  await tryError(() => new Block(), 'Block options are required')
 })
 
-test('No data or source', async t => {
-  await tryError(() => new Block({}), 'Block instances must be created with either an encode source or data', t)
+test('No data or source', async () => {
+  await tryError(() => new Block({}), 'Block instances must be created with either an encode source or data')
 })
 
-test('source only', async t => {
-  await tryError(() => new Block({ source: {} }), 'Block instances created from source objects must include desired codec', t)
+test('source only', async () => {
+  await tryError(() => new Block({ source: {} }), 'Block instances created from source objects must include desired codec')
 })
 
-test('data only', async t => {
-  await tryError(() => new Block({ data: Buffer.from('asdf') }), 'Block instances created from data must include cid or codec', t)
+test('data only', async () => {
+  await tryError(() => new Block({ data: Buffer.from('asdf') }), 'Block instances created from data must include cid or codec')
 })
 
-test('set opts', async t => {
+test('set opts', async () => {
   let block = Block.encoder({}, 'dag-cbor')
-  await tryError(() => { block.opts = 'asdf' }, 'Cannot set read-only property', t)
+  await tryError(() => { block.opts = 'asdf' }, 'Cannot set read-only property')
 })

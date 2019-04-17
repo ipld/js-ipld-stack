@@ -1,6 +1,11 @@
 const Block = require('../src/block')
 const { resolve, find } = require('../src/path-level-zero')
-const { test } = require('tap')
+const { it } = require('mocha')
+const assert = require('assert')
+const tsame = require('tsame')
+
+const same = (...args) => assert.ok(tsame(...args))
+const test = it
 
 const fixture = async () => {
   let db = new Map()
@@ -14,16 +19,16 @@ const fixture = async () => {
   return { leaf, raw, root, db, get: cid => db.get(cid.toBaseEncodedString()) }
 }
 
-test('basic find', async t => {
+test('basic find', async () => {
   let { root, get, leaf } = await fixture()
   let ret = await find('/one/two/three/leaf/hello', root, get)
-  t.same(await leaf.cid(), await ret.block.cid())
-  t.same(ret.value, 'world')
-  t.same(ret.path, 'hello')
+  same(await leaf.cid(), await ret.block.cid())
+  same(ret.value, 'world')
+  same(ret.path, 'hello')
 })
 
-test('basic resolve', async t => {
+test('basic resolve', async () => {
   let { root, get } = await fixture()
   let ret = await resolve('/one', root, get)
-  t.same(Object.keys(ret), ['two'])
+  same(Object.keys(ret), ['two'])
 })

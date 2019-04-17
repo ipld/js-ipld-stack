@@ -1,6 +1,11 @@
 const _codec = require('../src/codec-interface')
 const CID = require('cids')
-const { test } = require('tap')
+const { it } = require('mocha')
+const assert = require('assert')
+const tsame = require('tsame')
+
+const same = (...args) => assert.ok(tsame(...args))
+const test = it
 
 /* very bad dag codec for testing */
 const encode = async obj => {
@@ -24,13 +29,13 @@ const decode = async buffer => {
 
 const create = () => _codec.create(encode, decode, 'terrible-dag')
 
-test('test create', async t => {
+test('test create', async () => {
   create()
 })
 
-test('test encode/decode', async t => {
+test('test encode/decode', async () => {
   let codec = create()
   let buffer = await codec.encode({ hello: 'world' })
   let obj = await codec.decode(buffer)
-  t.same(obj, { hello: 'world' })
+  same(obj, { hello: 'world' })
 })

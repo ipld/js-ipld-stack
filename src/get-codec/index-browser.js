@@ -1,3 +1,9 @@
+// The current aegir configuration of eslint does not support
+// the import() function. It either needs to use babel-eslint
+// or we simply need to wait for import() function support in
+// Node.js which is happening relatively soon.
+
+/* eslint-disable */
 const cache = {}
 
 /* temp getFormat until the real one is implemented */
@@ -22,5 +28,7 @@ const getCodec = async codec => {
 }
 
 module.exports = getCodec
-module.exports.setCodec = codec => cache[codec.codec] = codec
+module.exports.setCodec = codec => {
+  cache[codec.codec] = codec
+}
 
