@@ -1,7 +1,7 @@
 const implementations = {
   'dag-cbor': require('../dag-cbor'),
   'dag-json': require('../dag-json'),
-  'raw': require('../raw')
+  raw: require('../raw')
 }
 
 /* temp getFormat until the real one is implemented */
