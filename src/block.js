@@ -27,6 +27,11 @@ class Block {
     opts = Object.assign({}, opts)
     Object.defineProperty(this, 'opts', readonly(opts))
   }
+  source () {
+    if (this.opts.cid || this.opts.data) return null
+    if (!this.opts.source) return null
+    return this.opts.source
+  }
   async cid () {
     if (this.opts.cid) return this.opts.cid
     let codec = this.codec

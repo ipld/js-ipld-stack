@@ -89,3 +89,15 @@ test('async codec', async () => {
   Block.getCodec.setCodec(asyncRawModule)
   await testRaw()
 })
+
+test('source', async () => {
+  let encoder = Block.encoder({ hello: 'world' }, 'dag-json')
+  same(encoder.source(), { hello: 'world' })
+  await encoder.cid()
+  same(encoder.source(), null)
+  encoder = Block.encoder({}, 'dag-json')
+  await encoder.encode()
+  same(encoder.source(), null)
+  let block = Block.decoder(Buffer.from('asd'), 'dag-json')
+  same(block.source(), null)
+})
