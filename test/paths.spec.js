@@ -1,5 +1,5 @@
 const Block = require('../src/block')
-const { resolve, find } = require('../src/path-level-zero')
+const { resolve, find } = require('../src/path-level-one')
 const { it } = require('mocha')
 const assert = require('assert')
 const tsame = require('tsame')

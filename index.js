@@ -4,5 +4,5 @@ module.exports = {
   getCodec: require('./src/get-codec'),
   codecInterface: require('./src/codec-interface'),
   raw: require('./src/raw'),
-  pathLevelZero: require('./src/path-level-zero')
+  pathLevelOne: require('./src/path-level-one')
 }
